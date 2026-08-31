@@ -1,0 +1,451 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Lineup</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Big+Shoulders+Display:wght@600;700;900&family=Inter:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+
+<style>
+  :root{
+    --bg: #FBFAF6;
+    --panel: #FFFFFF;
+    --ink: #12120F;
+    --ink-soft: #55564E;
+    --line: #DEDBCE;
+    --gold: #F2B705;
+    --gold-ink: #5C4400;
+    --teal: #0E7C7B;
+    --teal-ink: #06403F;
+    --red: #D7263D;
+    --red-ink: #6E1420;
+    --violet: #5B4B8A;
+    --violet-ink: #2E2549;
+  }
+  *{box-sizing:border-box;}
+  body{
+    margin:0;
+    background:var(--bg);
+    color:var(--ink);
+    font-family:'Inter',sans-serif;
+  }
+  .display{
+    font-family:'Big Shoulders Display',sans-serif;
+    font-weight:900;
+    text-transform:uppercase;
+    letter-spacing:0.01em;
+  }
+  .mono{
+    font-family:'IBM Plex Mono',monospace;
+  }
+
+  /* ===== Top bar ===== */
+  .topbar{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    padding:22px 40px;
+    border-bottom:2px solid var(--ink);
+  }
+  .logo{
+    font-size:26px;
+    line-height:1;
+  }
+  .logo span{color:var(--red);}
+  .nav{
+    display:flex;
+    gap:28px;
+  }
+  .nav a{
+    font-size:13px;
+    font-weight:600;
+    letter-spacing:0.04em;
+    text-transform:uppercase;
+    color:var(--ink-soft);
+    text-decoration:none;
+    padding-bottom:4px;
+    border-bottom:2px solid transparent;
+  }
+  .nav a.active{color:var(--ink);border-bottom-color:var(--gold);}
+  .search{
+    font-family:'IBM Plex Mono',monospace;
+    font-size:12px;
+    border:1.5px solid var(--ink);
+    border-radius:2px;
+    padding:8px 12px;
+    background:var(--panel);
+    width:220px;
+    color:var(--ink-soft);
+  }
+
+  /* ===== Hero: the lineup grid ===== */
+  .hero{
+    padding:36px 40px 10px;
+  }
+  .hero-head{
+    display:flex;
+    justify-content:space-between;
+    align-items:flex-end;
+    margin-bottom:16px;
+  }
+  
+  .hero-head h1{
+    font-size:44px;
+    margin:0;
+    line-height:0.9;
+  }
+
+  .hero-head p{
+    font-size:13px;
+    color:var(--ink-soft);
+    margin:6px 0 0;
+    max-width:340px;
+    line-height:1.5;
+  }
+
+  .eyebrow{
+    font-family:'IBM Plex Mono',monospace;
+    font-size:11px;
+    letter-spacing:0.12em;
+    text-transform:uppercase;
+    color:var(--ink-soft);
+    margin:0 0 6px;
+  }
+
+  .schedule{
+    display:grid;
+    grid-template-columns: 90px repeat(5, 1fr);
+    border:2px solid var(--ink);
+    border-radius:4px;
+    overflow:hidden;
+    background:var(--panel);
+  }
+  .schedule > div{
+    border-right:1px solid var(--line);
+    border-bottom:1px solid var(--line);
+    padding:10px 12px;
+  }
+  .schedule > div:last-child{border-right:none;}
+  .sched-corner{
+    background:var(--ink);
+  }
+  .sched-day{
+    font-size:12px;
+    font-weight:600;
+    letter-spacing:0.06em;
+    text-transform:uppercase;
+    background:var(--ink);
+    color:var(--bg);
+  }
+  .sched-time{
+    font-family:'IBM Plex Mono',monospace;
+    font-size:11px;
+    color:var(--ink-soft);
+    background:#F2F1E9;
+    display:flex;
+    align-items:center;
+  }
+  .slot{
+    cursor:pointer;
+    transition:transform .12s ease;
+  }
+  .slot:hover{transform:translateY(-1px);}
+  .slot .t{
+    font-size:13px;
+    font-weight:600;
+    display:block;
+    line-height:1.25;
+  }
+  .slot .g{
+    font-family:'IBM Plex Mono',monospace;
+    font-size:10px;
+    text-transform:uppercase;
+    letter-spacing:.05em;
+    opacity:.75;
+    display:block;
+    margin-top:3px;
+  }
+  .slot.empty{background:repeating-linear-gradient(135deg, #F2F1E9, #F2F1E9 6px, #EAE8DC 6px, #EAE8DC 12px);}
+  .slot.g-drama{background:#FBEAF0;color:var(--red-ink);}
+  .slot.g-scifi{background:#E1F5EE;color:var(--teal-ink);}
+  .slot.g-comedy{background:#FDF3D1;color:var(--gold-ink);}
+  .slot.g-doc{background:#EDEAF6;color:var(--violet-ink);}
+  .slot.g-thriller{background:#111112;color:#F2B705;}
+  .slot.g-action{background: #FDF3D1;color: #F2B705;}
+
+  /* ===== Filter row ===== */
+  .filters{
+    display:flex;
+    align-items:center;
+    gap:10px;
+    padding:28px 40px 0;
+    flex-wrap:wrap;
+  }
+  .filters .label{
+    font-family:'IBM Plex Mono',monospace;
+    font-size:11px;
+    text-transform:uppercase;
+    letter-spacing:.1em;
+    color:var(--ink-soft);
+    margin-right:6px;
+  }
+  .chip{
+    font-family:'IBM Plex Mono',monospace;
+    font-size:12px;
+    padding:7px 14px;
+    border:1.5px solid var(--ink);
+    border-radius:20px;
+    background:var(--panel);
+    color:var(--ink);
+    cursor:pointer;
+  }
+  .chip.on{
+    background:var(--ink);
+    color:var(--bg);
+  }
+
+  /* ===== Catalog: index sections ===== */
+  .catalog{
+    padding:30px 40px 60px;
+  }
+  .section{
+    margin-bottom:34px;
+  }
+  .section-head{
+    display:flex;
+    align-items:baseline;
+    gap:14px;
+    border-bottom:2px solid var(--ink);
+    padding-bottom:8px;
+    margin-bottom:16px;
+  }
+  .section-head h2{
+    font-size:22px;
+    margin:0;
+  }
+  .section-head .count{
+    font-family:'IBM Plex Mono',monospace;
+    font-size:12px;
+    color:var(--ink-soft);
+  }
+  .grid{
+    display:grid;
+    grid-template-columns:repeat(auto-fill,minmax(230px,1fr));
+    gap:16px;
+  }
+  .card{
+    background:var(--panel);
+    border:1.5px solid var(--ink);
+    border-radius:3px;
+    padding:14px 16px 16px;
+    position:relative;
+    display:flex;
+    flex-direction:column;
+    gap:8px;
+  }
+  .card::before{
+    content:'';
+    position:absolute;
+    left:0;top:0;bottom:0;
+    width:6px;
+  }
+  .card.g-drama::before{background:var(--red);}
+  .card.g-scifi::before{background:var(--teal);}
+  .card.g-comedy::before{background:var(--gold);}
+  .card.g-doc::before{background:var(--violet);}
+  .card.g-thriller::before{background:var(--ink);}
+  .card.g.action::before{background: var(--gold-ink);}
+  .card-top{
+    display:flex;
+    justify-content:space-between;
+    align-items:flex-start;
+    margin-left:6px;
+  }
+  .card-top .tag{
+    font-family:'IBM Plex Mono',monospace;
+    font-size:10px;
+    text-transform:uppercase;
+    letter-spacing:.05em;
+    padding:2px 7px;
+    border-radius:2px;
+  }
+  .card.g-drama .tag{background:#FBEAF0;color:var(--red-ink);}
+  .card.g-scifi .tag{background:#E1F5EE;color:var(--teal-ink);}
+  .card.g-comedy .tag{background:#FDF3D1;color:var(--gold-ink);}
+  .card.g-doc .tag{background:#EDEAF6;color:var(--violet-ink);}
+  .card.g-thriller .tag{background:#111112;color:#F2B705;}
+  .card.g-action .tag{background: #12120F;color: #F2B705;}
+  .card-top .fmt{
+    font-family:'IBM Plex Mono',monospace;
+    font-size:10px;
+    color:var(--ink-soft);
+  }
+  .card h3{
+    margin:0 0 0 6px;
+    font-size:18px;
+    line-height:1.05;
+  }
+  .card .meta{
+    margin-left:6px;
+    font-family:'IBM Plex Mono',monospace;
+    font-size:11px;
+    color:var(--ink-soft);
+  }
+  .card p.blurb{
+    margin:0 0 0 6px;
+    font-size:12.5px;
+    color:var(--ink-soft);
+    line-height:1.45;
+  }
+
+  .hidden{display:none !important;}
+
+  @media (max-width:820px){
+    .schedule{grid-template-columns:60px repeat(5,1fr);}
+    .topbar{padding:16px 20px;flex-wrap:wrap;gap:12px;}
+    .hero,.filters,.catalog{padding-left:20px;padding-right:20px;}
+    .search{display:none;}
+  }
+</style>
+</head>
+<body>
+
+<div class="topbar">
+  <div class="logo display">LINEUP</div>
+  <div class="nav">
+    <a href="#" class="active">Guide</a>
+    <a href="#">Films</a>
+    <a href="#">Series</a>
+    <a href="#">Documentaries</a>
+    <a href="#">Saved</a>
+  </div>
+  <input class="search" placeholder="search the catalog">
+</div>
+
+<div class="hero">
+  <div class="hero-head">
+    <div>
+      <p class="eyebrow">This week's programming</p>
+      <h1 class="display">LINEUP</h1>
+    </div>
+  </div>
+
+  <div class="schedule" id="schedule">
+    <div class="sched-corner"></div>
+    <div class="sched-day">Mon</div>
+    <div class="sched-day">Tue</div>
+    <div class="sched-day">Wed</div>
+    <div class="sched-day">Thu</div>
+    <div class="sched-day">Fri</div>
+
+    <div class="sched-time">Evening</div>
+    <div class="slot g-drama"><span class="t">Salt Line</span><span class="g">Drama · S2</span></div>
+    <div class="slot g-comedy"><span class="t">Half Measures</span><span class="g">Comedy · S1</span></div>
+    <div class="slot g-scifi"><span class="t">Auric</span><span class="g">Sci-fi · Film</span></div>
+    <div class="slot empty"></div>
+    <div class="slot g-thriller"><span class="t">No Vacancy</span><span class="g">Thriller · Film</span></div>
+
+    <div class="sched-time">Late</div>
+    <div class="slot empty"></div>
+    <div class="slot g-doc"><span class="t">Concrete &amp; Coral</span><span class="g">Doc · Film</span></div>
+    <div class="slot g-drama"><span class="t">Harbor Light</span><span class="g">Drama · Film</span></div>
+    <div class="slot g-scifi"><span class="t">Auric</span><span class="g">Sci-fi · Film</span></div>
+    <div class="slot empty"></div>
+  </div>
+</div>
+
+<div class="filters" id="filters">
+  <span class="label">Filter</span>
+  <div class="chip on" data-genre="all">All</div>
+  <div class="chip" data-genre="drama">Drama</div>
+  <div class="chip" data-genre="comedy">Comedy</div>
+  <div class="chip" data-genre="scifi">Sci-fi</div>
+  <div class="chip" data-genre="thriller">Thriller</div>
+  <div class="chip" data-genre="doc">Documentary</div>
+  <div class="chip" data-genre="action">Action</div>
+</div>
+
+<div class="catalog" id="catalog"></div>
+
+<script>
+const DATA = {
+  "New this week": [
+    {t:"Salt Line", g:"drama", fmt:"Series · S2", meta:"8 episodes · TV-14 · 2026", blurb:"A shipping-lane dispute pulls three coastal families into a slow-burn feud over the water itself."},
+    {t:"Auric", g:"scifi", fmt:"Film", meta:"2h 04m · TV-14 · 2026", blurb:"A metallurgist discovers a compound that ages backward — and can't tell anyone why she needs it."},
+    {t:"No Vacancy", g:"thriller", fmt:"Film", meta:"1h 51m · TV-MA · 2025", blurb:"A motel night manager keeps two guests from finding out the third guest never checked out."},
+    {t:"Half Measures", g:"comedy", fmt:"Series · S1", meta:"6 episodes · TV-14 · 2026", blurb:"Two estranged business partners are forced to run the same food truck on alternating days."}
+  ],
+  "Documentary desk": [
+    {t:"Concrete & Coral", g:"doc", fmt:"Film", meta:"1h 38m · TV-PG · 2025", blurb:"Engineers race to build artificial reefs into a city's seawall before the next storm season."},
+    {t:"The Ledger Keepers", g:"doc", fmt:"Series · S1", meta:"4 episodes · TV-14 · 2024", blurb:"Inside the small accounting firms that quietly audit the world's biggest shipping fraud cases."},
+    {t:"Low Orbit", g:"doc", fmt:"Film", meta:"1h 46m · TV-PG · 2026", blurb:"A year embedded with the ground crew keeping a decommissioned space station in the sky."}
+  ],
+  "Drama collection": [
+    {t:"Harbor Light", g:"drama", fmt:"Film", meta:"2h 12m · TV-14 · 2025", blurb:"A retired lighthouse keeper is asked to train her replacement — and finally say what she saw."},
+    {t:"Salt Line", g:"drama", fmt:"Series · S2", meta:"8 episodes · TV-14 · 2026", blurb:"A shipping-lane dispute pulls three coastal families into a slow-burn feud over the water itself."},
+    {t:"Second Shift", g:"drama", fmt:"Series · S3", meta:"10 episodes · TV-MA · 2023", blurb:"Nurses on the overnight ward hold a hospital together through a budget crisis and a blackout."},
+    {t:"The Understudy", g:"drama", fmt:"Film", meta:"1h 57m · TV-14 · 2024", blurb:"A regional theater's backup lead gets one week to become the star everyone already believes she is."}
+  ],
+  "Sci-fi & thriller": [
+    {t:"Auric", g:"scifi", fmt:"Film", meta:"2h 04m · TV-14 · 2026", blurb:"A metallurgist discovers a compound that ages backward — and can't tell anyone why she needs it."},
+    {t:"No Vacancy", g:"thriller", fmt:"Film", meta:"1h 51m · TV-MA · 2025", blurb:"A motel night manager keeps two guests from finding out the third guest never checked out."},
+    {t:"Relay", g:"scifi", fmt:"Series · S1", meta:"8 episodes · TV-14 · 2025", blurb:"A skeleton crew keeps a deep-space relay station running one signal at a time, alone."},
+    {t:"Quiet Hours", g:"thriller", fmt:"Film", meta:"1h 44m · TV-MA · 2026", blurb:"A soundproofing contractor realizes the silence he installed is hiding something in the walls."}
+  ],
+  "Action": [
+    {t:"Die Hard", g:"action", fmt:"Film", meta:"1h 20m . TV-PG . 2001", blurb:"A retired marine tries to save christmas before his family is killed"},
+    {t:"Silo", g:"action", fmt:"Series", meta:"8 episodes . TV-14 . 2016", blurb:"Trapped in an underground structure, citizens of silo must figure out a way to get the truth and get out the silo"},
+    {t:"The Expendables", g:"action", fmt:"Film", meta:"1h 20m . TV-PG . 2011", blurb:"6 friends must find a way to fight against a corrupt warload and seek justice for their country"},
+    {t:"Furious", g:"action", fmt:"Series", meta:"10 episodes . TV-MA . 2005", blurb:"The safety of an island rests on the shoulders of a little boy"}
+  ]
+};
+
+const catalog = document.getElementById('catalog');
+
+function render(activeGenre){
+  catalog.innerHTML = '';
+  Object.entries(DATA).forEach(([section, items]) => {
+    const visible = items.filter(i => activeGenre === 'all' || i.g === activeGenre);
+    if(visible.length === 0) return;
+    const sec = document.createElement('div');
+    sec.className = 'section';
+    sec.innerHTML = `
+      <div class="section-head">
+        <h2 class="display">${section}</h2>
+        <span class="count mono">${visible.length} title${visible.length===1?'':'s'}</span>
+      </div>
+      <div class="grid"></div>
+    `;
+    const grid = sec.querySelector('.grid');
+    visible.forEach(item => {
+      const card = document.createElement('div');
+      card.className = `card g-${item.g}`;
+      card.innerHTML = `
+        <div class="card-top">
+          <span class="tag">${item.g}</span>
+          <span class="fmt">${item.fmt}</span>
+        </div>
+        <h3>${item.t}</h3>
+        <div class="meta">${item.meta}</div>
+        <p class="blurb">${item.blurb}</p>
+      `;
+      grid.appendChild(card);
+    });
+    catalog.appendChild(sec);
+  });
+}
+
+document.getElementById('filters').addEventListener('click', (e) => {
+  const chip = e.target.closest('.chip');
+  if(!chip) return;
+  document.querySelectorAll('.chip').forEach(c => c.classList.remove('on'));
+  chip.classList.add('on');
+  render(chip.dataset.genre);
+});
+
+render('all');
+</script>
+
+</body>
+</html>
